@@ -16,16 +16,16 @@ echo "Wake-up granularity: ${WAKEUP_GRANULARITY_MS}ms"
 echo "Task migration cost: ${MIGRATION_COST_MS}ms"
 echo "Amount of runtime to allocate from global to local pool: ${BANDWIDTH_SIZE_MS}ms"
 
-call_awk() {
-  printf '%s' "$(awk 'BEGIN {print '"${1}"'}')"
+call_gawk() {
+  printf '%s' "$(gawk 'BEGIN {print '"${1}"'}')"
 }
 
 NPROC="$(nproc)"
 # Linux uses this algorithm to multiply miliseconds
-MODIFIER="$( call_awk "10 ** 6 * (1 + int(log(${NPROC}) / log(2)))" )"
+MODIFIER="$( call_gawk "10 ** 6 * (1 + int(log(${NPROC}) / log(2)))" )"
 
-printf '%s' "$( call_awk "int(${LATENCY_MS} * ${MODIFIER})" )" > /sys/kernel/debug/sched/latency_ns
-printf '%s' "$( call_awk "int(${MIN_GRANULARITY_MS} * ${MODIFIER})" )" > /sys/kernel/debug/sched/min_granularity_ns
-printf '%s' "$( call_awk "int(${WAKEUP_GRANULARITY_MS} * ${MODIFIER})" )" > /sys/kernel/debug/sched/wakeup_granularity_ns
-printf '%s' "$( call_awk "int(${MIGRATION_COST_MS} * ${MODIFIER})" )" > /sys/kernel/debug/sched/migration_cost_ns
-printf '%s' "$( call_awk "int(${BANDWIDTH_SIZE_MS} * 1000)" )" > /proc/sys/kernel/sched_cfs_bandwidth_slice_us
+printf '%s' "$( call_gawk "int(${LATENCY_MS} * ${MODIFIER})" )" > /sys/kernel/debug/sched/latency_ns
+printf '%s' "$( call_gawk "int(${MIN_GRANULARITY_MS} * ${MODIFIER})" )" > /sys/kernel/debug/sched/min_granularity_ns
+printf '%s' "$( call_gawk "int(${WAKEUP_GRANULARITY_MS} * ${MODIFIER})" )" > /sys/kernel/debug/sched/wakeup_granularity_ns
+printf '%s' "$( call_gawk "int(${MIGRATION_COST_MS} * ${MODIFIER})" )" > /sys/kernel/debug/sched/migration_cost_ns
+printf '%s' "$( call_gawk "int(${BANDWIDTH_SIZE_MS} * 1000)" )" > /proc/sys/kernel/sched_cfs_bandwidth_slice_us
