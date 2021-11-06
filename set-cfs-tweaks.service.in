@@ -1,0 +1,9 @@
+[Unit]
+Description=Set CFS tweaks
+
+[Service]
+ExecStart=@SCRIPT_INSTALL_DIR@/script.sh
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
