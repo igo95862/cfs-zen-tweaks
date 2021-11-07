@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-project(cfs_zen_tweaks)
+project(cfs-zen-tweaks)
 
 cmake_minimum_required(VERSION 3.21)
 
@@ -40,11 +40,13 @@ set(CPACK_PACKAGE_CONTACT "github.com/igo95862/cfs-zen-tweaks")
 set(CPACK_PACKAGE_VERSION_MAJOR "1")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
+set(CPACK_RPM_PACKAGE_LICENSE "GPL-2.0-only")
 
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "any")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "bash, systemd, gawk")
 
 set(CPACK_RPM_PACKAGE_ARCHITECTURE "noarch")
 set(CPACK_RPM_PACKAGE_REQUIRES "bash, systemd, gawk")
+set(CPACK_RPM_PACKAGE_LICENSE "GPL-2.0-only")
 
 include(CPack)
