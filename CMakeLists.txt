@@ -22,7 +22,7 @@ find_program(M4 m4)
 
 include(GNUInstallDirs)
 
-set(SCRIPT_INSTALL_DIR "${CMAKE_INSTALL_FULL_LIBDIR}/cfs-zen-tweaks")
+set(SCRIPT_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/cfs-zen-tweaks")
 
 install(FILES script.sh
         DESTINATION "${SCRIPT_INSTALL_DIR}/"
@@ -31,7 +31,7 @@ install(FILES script.sh
 configure_file("set-cfs-tweaks.service.in" "set-cfs-tweaks.service")
 
 install(FILES "${CMAKE_BINARY_DIR}/set-cfs-tweaks.service"
-        DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/systemd/system"
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/systemd/system"
 )
 
 set(CPACK_GENERATOR "DEB;RPM")
