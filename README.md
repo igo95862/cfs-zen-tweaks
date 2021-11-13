@@ -41,6 +41,8 @@ systemctl enable --now set-cfs-tweaks.service
 
 ## Version History
 
+* 1.1.0
+    * Added support for kernels before version 5.13
 * 1.0.0
     * Initial Release
 
