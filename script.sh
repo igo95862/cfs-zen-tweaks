@@ -41,8 +41,22 @@ NPROC="$(nproc)"
 # Linux uses this algorithm to multiply miliseconds
 MODIFIER="$( call_gawk "10 ** 6 * (1 + int(log(${NPROC}) / log(2)))" )"
 
-printf '%s' "$( call_gawk "int(${LATENCY_MS} * ${MODIFIER})" )" > /sys/kernel/debug/sched/latency_ns
-printf '%s' "$( call_gawk "int(${MIN_GRANULARITY_MS} * ${MODIFIER})" )" > /sys/kernel/debug/sched/min_granularity_ns
-printf '%s' "$( call_gawk "int(${WAKEUP_GRANULARITY_MS} * ${MODIFIER})" )" > /sys/kernel/debug/sched/wakeup_granularity_ns
-printf '%s' "$( call_gawk "int(${MIGRATION_COST_MS} * ${MODIFIER})" )" > /sys/kernel/debug/sched/migration_cost_ns
-printf '%s' "$( call_gawk "int(${BANDWIDTH_SIZE_MS} * 1000)" )" > /proc/sys/kernel/sched_cfs_bandwidth_slice_us
+LATENCY_NS_FILE="/sys/kernel/debug/sched/latency_ns"
+MIN_GRANULARITY_NS_FILE="/sys/kernel/debug/sched/min_granularity_ns"
+WAKEUP_GRANULARITY_NS_FILE="/sys/kernel/debug/sched/wakeup_granularity_ns"
+MIGRATION_COST_NS_FILE="/sys/kernel/debug/sched/migration_cost_ns"
+BANDWIDTH_SIZE_US_FILE="/proc/sys/kernel/sched_cfs_bandwidth_slice_us"
+
+if [ ! -f "$LATENCY_NS_FILE" ]; then
+    echo "Detected kernel <5.13. Using legacy locations."
+    LATENCY_NS_FILE="/proc/sys/kernel/sched_latency_ns"
+    MIN_GRANULARITY_NS_FILE="/proc/sys/kernel/sched_min_granularity_ns"
+    WAKEUP_GRANULARITY_NS_FILE="/proc/sys/kernel/sched_wakeup_granularity_ns"
+    MIGRATION_COST_NS_FILE="/proc/sys/kernel/sched_migration_cost_ns"
+fi
+
+printf '%s' "$( call_gawk "int(${LATENCY_MS} * ${MODIFIER})" )" > "$LATENCY_NS_FILE"
+printf '%s' "$( call_gawk "int(${MIN_GRANULARITY_MS} * ${MODIFIER})" )" > "$MIN_GRANULARITY_NS_FILE"
+printf '%s' "$( call_gawk "int(${WAKEUP_GRANULARITY_MS} * ${MODIFIER})" )" > "$WAKEUP_GRANULARITY_NS_FILE"
+printf '%s' "$( call_gawk "int(${MIGRATION_COST_MS} * ${MODIFIER})" )" > "$MIGRATION_COST_NS_FILE"
+printf '%s' "$( call_gawk "int(${BANDWIDTH_SIZE_MS} * 1000)" )" > "$BANDWIDTH_SIZE_US_FILE"
