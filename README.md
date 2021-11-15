@@ -45,6 +45,8 @@ Script might not work because of restrictive SELinux policy. [See this thread fo
 
 ## Version History
 
+* 1.1.1
+    * Fixed systemd unit not applying tweaks after suspend or hibernate
 * 1.1.0
     * Added support for kernels before version 5.13
 * 1.0.0
