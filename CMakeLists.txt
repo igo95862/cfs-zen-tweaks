@@ -19,10 +19,6 @@ project(cfs-zen-tweaks
 
 cmake_minimum_required(VERSION 3.21)
 
-find_program(M4 m4)
-
-include(GNUInstallDirs)
-
 option(USE_SBIN "Use sbin location instead of lib. Mostly used for SELinux on fedora.")
 
 if(USE_SBIN)
