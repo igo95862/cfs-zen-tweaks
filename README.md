@@ -45,6 +45,9 @@ Script might not work because of restrictive SELinux policy. [See this thread fo
 
 ## Version History
 
+* 1.2.0
+    * Fixed SELinux preventing systemd unit to run on Fedora (now script resides in `/usr/sbin` directory)
+    * Gave unique name to script. (now is called `set-cfs-zen-tweaks.bash`)
 * 1.1.1
     * Fixed systemd unit not applying tweaks after suspend or hibernate
 * 1.1.0
