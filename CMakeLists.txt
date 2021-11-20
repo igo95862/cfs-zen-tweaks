@@ -13,8 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+cmake_policy(SET CMP0048 NEW)
+
 project(cfs-zen-tweaks
         LANGUAGES NONE
+        HOMEPAGE_URL "https://github.com/igo95862/cfs-zen-tweaks"
+        DESCRIPTION "Tweak Linux kernel CFS scheduler for responsiveness"
+        VERSION "1.2.0"
 )
 
 cmake_minimum_required(VERSION 3.21)
@@ -41,9 +46,6 @@ install(FILES "${CMAKE_BINARY_DIR}/set-cfs-tweaks.service"
 set(CPACK_GENERATOR "DEB;RPM")
 set(CPACK_PACKAGE_NAME "cfs-zen-tweaks")
 set(CPACK_PACKAGE_CONTACT "github.com/igo95862/cfs-zen-tweaks")
-set(CPACK_PACKAGE_VERSION_MAJOR "1")
-set(CPACK_PACKAGE_VERSION_MINOR "1")
-set(CPACK_PACKAGE_VERSION_PATCH "1")
 set(CPACK_RPM_PACKAGE_LICENSE "GPL-2.0-only")
 
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "all")
