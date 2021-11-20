@@ -54,5 +54,6 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "bash, systemd, gawk")
 set(CPACK_RPM_PACKAGE_ARCHITECTURE "noarch")
 set(CPACK_RPM_PACKAGE_REQUIRES "bash, systemd, gawk")
 set(CPACK_RPM_PACKAGE_LICENSE "GPL-2.0-only")
+set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/usr/sbin;/usr/lib/systemd;/usr/lib/systemd/system")
 
 include(CPack)
