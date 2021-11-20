@@ -21,7 +21,13 @@ find_program(M4 m4)
 
 include(GNUInstallDirs)
 
-set(SCRIPT_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/cfs-zen-tweaks")
+option(USE_SBIN "Use sbin location instead of lib. Mostly used for SELinux on fedora.")
+
+if(USE_SBIN)
+    set(SCRIPT_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/sbin")
+else()
+    set(SCRIPT_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/cfs-zen-tweaks")
+endif()
 
 install(FILES set-cfs-zen-tweaks.bash
         DESTINATION "${SCRIPT_INSTALL_DIR}/"
