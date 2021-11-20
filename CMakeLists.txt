@@ -23,7 +23,7 @@ include(GNUInstallDirs)
 
 set(SCRIPT_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/cfs-zen-tweaks")
 
-install(FILES script.sh
+install(FILES set-cfs-zen-tweaks.bash
         DESTINATION "${SCRIPT_INSTALL_DIR}/"
         PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ WORLD_EXECUTE
 )
