@@ -39,10 +39,6 @@ Tweaks can be applied on boot using provided systemd unit.
 systemctl enable --now set-cfs-tweaks.service
 ```
 
-### SELinux
-
-Script might not work because of restrictive SELinux policy. [See this thread for directions.](https://github.com/igo95862/cfs-zen-tweaks/issues/1)
-
 ## Version History
 
 * 1.2.0
