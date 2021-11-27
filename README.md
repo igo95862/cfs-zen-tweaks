@@ -39,6 +39,10 @@ Tweaks can be applied on boot using provided systemd unit.
 systemctl enable --now set-cfs-tweaks.service
 ```
 
+### Secure Boot
+
+If you have Secure Boot the script might not be able to run. [See this thread for directions.](https://github.com/igo95862/cfs-zen-tweaks/issues/3)
+
 ## Version History
 
 * 1.2.0
