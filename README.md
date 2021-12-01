@@ -27,7 +27,7 @@ Build dependencies:
 
 Available on [AUR](https://aur.archlinux.org/packages/cfs-zen-tweaks/).
 
-Also see [releases page](https://github.com/igo95862/cfs-zen-tweaks/releases/tag/1.0.0) for built RPM and DEB packages.
+Also see [releases page](https://github.com/igo95862/cfs-zen-tweaks/releases) for built RPM and DEB packages.
 
 You can also build from source using cmake build system.
 
