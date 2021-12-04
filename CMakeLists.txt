@@ -49,10 +49,10 @@ set(CPACK_PACKAGE_CONTACT "github.com/igo95862/cfs-zen-tweaks")
 set(CPACK_RPM_PACKAGE_LICENSE "GPL-2.0-only")
 
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "all")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "bash, systemd, gawk")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "systemd, gawk")
 
 set(CPACK_RPM_PACKAGE_ARCHITECTURE "noarch")
-set(CPACK_RPM_PACKAGE_REQUIRES "bash, systemd, gawk")
+set(CPACK_RPM_PACKAGE_REQUIRES "systemd, gawk")
 set(CPACK_RPM_PACKAGE_LICENSE "GPL-2.0-only")
 set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/usr/sbin;/usr/lib/systemd;/usr/lib/systemd/system")
 

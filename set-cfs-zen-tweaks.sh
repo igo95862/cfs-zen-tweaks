@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # SPDX-License-Identifier: GPL-2.0-only
 # Copyright (C) 2021  igo95862
 
@@ -15,9 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-set -eEu -o pipefail
-shopt -s extdebug
-IFS=$'\n\t'
+set -eu
 
 LATENCY_MS=4
 MIN_GRANULARITY_MS=0.4
