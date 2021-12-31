@@ -32,7 +32,7 @@ else()
     set(SCRIPT_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/cfs-zen-tweaks")
 endif()
 
-install(FILES set-cfs-zen-tweaks.bash
+install(FILES set-cfs-zen-tweaks.sh
         DESTINATION "${SCRIPT_INSTALL_DIR}/"
         PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ WORLD_EXECUTE
 )
