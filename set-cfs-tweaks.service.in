@@ -18,7 +18,7 @@ Description=Set CFS tweaks
 After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
 
 [Service]
-ExecStart=@SCRIPT_INSTALL_DIR@/set-cfs-zen-tweaks.bash
+ExecStart=@SCRIPT_INSTALL_DIR@/set-cfs-zen-tweaks.sh
 Type=oneshot
 
 [Install]
