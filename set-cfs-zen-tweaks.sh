@@ -51,6 +51,7 @@ if [ ! -f "$LATENCY_NS_FILE" ]; then
     MIN_GRANULARITY_NS_FILE="/proc/sys/kernel/sched_min_granularity_ns"
     WAKEUP_GRANULARITY_NS_FILE="/proc/sys/kernel/sched_wakeup_granularity_ns"
     MIGRATION_COST_NS_FILE="/proc/sys/kernel/sched_migration_cost_ns"
+    NR_MIGRATE_FILE="/proc/sys/kernel/sched_nr_migrate"
 fi
 
 printf '%s' "$( call_gawk "int(${LATENCY_MS} * ${MODIFIER})" )" > "$LATENCY_NS_FILE"
