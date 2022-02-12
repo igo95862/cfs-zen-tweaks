@@ -29,6 +29,7 @@ echo "Minimal preemption granularity for CPU-bound tasks: ${MIN_GRANULARITY_MS}m
 echo "Wake-up granularity: ${WAKEUP_GRANULARITY_MS}ms"
 echo "Task migration cost: ${MIGRATION_COST_MS}ms"
 echo "Amount of runtime to allocate from global to local pool: ${BANDWIDTH_SIZE_MS}ms"
+echo "Number of tasks to iterate in a single balance run: ${NR_MIGRATE}"
 
 call_gawk() {
   printf '%s' "$(gawk 'BEGIN {print '"${1}"'}')"
