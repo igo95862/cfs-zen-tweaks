@@ -22,7 +22,7 @@ project(cfs-zen-tweaks
         VERSION "1.2.0"
 )
 
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.16)
 
 option(USE_SBIN "Use sbin location instead of lib. Mostly used for SELinux on fedora.")
 
