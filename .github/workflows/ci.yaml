@@ -1,0 +1,31 @@
+---
+
+name: Build and test
+
+on: [push, fork, workflow_dispatch]
+
+jobs:
+  ubuntu-20_04:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt --yes upgrade
+          sudo env DEBIAN_FRONTEND=noninteractive apt --yes install cmake rpm
+      - name: Build package
+        run: |
+          mkdir build
+          cd build
+          cmake -DUSE_SBIN=ON -DCMAKE_INSTALL_PREFIX='/usr' ..
+          cpack
+          sudo apt install --yes ./*.deb
+      - name: Activate service
+        run: |
+          set +e
+          sudo systemctl start set-cfs-tweaks.service
+          sudo systemctl status --full --no-pager set-cfs-tweaks.service
+          status=$?
+          if [ $status != 3 ]; then exit 1; fi
