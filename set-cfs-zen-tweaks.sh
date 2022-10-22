@@ -31,13 +31,13 @@ echo "Task migration cost: ${MIGRATION_COST_MS}ms"
 echo "Amount of runtime to allocate from global to local pool: ${BANDWIDTH_SIZE_MS}ms"
 echo "Number of tasks to iterate in a single balance run: ${NR_MIGRATE}"
 
-call_gawk() {
-  printf '%s' "$(gawk 'BEGIN {print '"${1}"'}')"
+calc() {
+    gawk "BEGIN { printf \"%d\", $1 }"
 }
 
 NPROC="$(nproc)"
 # Linux uses this algorithm to multiply miliseconds
-MODIFIER="$( call_gawk "10 ** 6 * (1 + int(log(${NPROC}) / log(2)))" )"
+MODIFIER="$( calc "10 ** 6 * (1 + int(log(${NPROC}) / log(2)))" )"
 
 LATENCY_NS_FILE="/sys/kernel/debug/sched/latency_ns"
 MIN_GRANULARITY_NS_FILE="/sys/kernel/debug/sched/min_granularity_ns"
@@ -55,9 +55,9 @@ if [ ! -f "$LATENCY_NS_FILE" ]; then
     NR_MIGRATE_FILE="/proc/sys/kernel/sched_nr_migrate"
 fi
 
-printf '%s' "$( call_gawk "int(${LATENCY_MS} * ${MODIFIER})" )" > "$LATENCY_NS_FILE"
-printf '%s' "$( call_gawk "int(${MIN_GRANULARITY_MS} * ${MODIFIER})" )" > "$MIN_GRANULARITY_NS_FILE"
-printf '%s' "$( call_gawk "int(${WAKEUP_GRANULARITY_MS} * ${MODIFIER})" )" > "$WAKEUP_GRANULARITY_NS_FILE"
-printf '%s' "$( call_gawk "int(${MIGRATION_COST_MS} * ${MODIFIER})" )" > "$MIGRATION_COST_NS_FILE"
-printf '%s' "$( call_gawk "int(${BANDWIDTH_SIZE_MS} * 1000)" )" > "$BANDWIDTH_SIZE_US_FILE"
-printf '%s' "$NR_MIGRATE" > "$NR_MIGRATE_FILE"
+calc "${LATENCY_MS} * ${MODIFIER}" > "$LATENCY_NS_FILE"
+calc "${MIN_GRANULARITY_MS} * ${MODIFIER}" > "$MIN_GRANULARITY_NS_FILE"
+calc "${WAKEUP_GRANULARITY_MS} * ${MODIFIER}" > "$WAKEUP_GRANULARITY_NS_FILE"
+calc "${MIGRATION_COST_MS} * ${MODIFIER}" > "$MIGRATION_COST_NS_FILE"
+calc "${BANDWIDTH_SIZE_MS} * 1000" > "$BANDWIDTH_SIZE_US_FILE"
+calc "$NR_MIGRATE" > "$NR_MIGRATE_FILE"
