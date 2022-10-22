@@ -17,6 +17,7 @@
 
 set -eu
 
+# Targets
 LATENCY_MS=4
 MIN_GRANULARITY_MS=0.4
 WAKEUP_GRANULARITY_MS=0.5
@@ -24,21 +25,18 @@ MIGRATION_COST_MS=0.25
 BANDWIDTH_SIZE_MS=3
 NR_MIGRATE=64
 
-echo "Targeted preemption latency for CPU-bound tasks: ${LATENCY_MS}ms"
-echo "Minimal preemption granularity for CPU-bound tasks: ${MIN_GRANULARITY_MS}ms"
-echo "Wake-up granularity: ${WAKEUP_GRANULARITY_MS}ms"
-echo "Task migration cost: ${MIGRATION_COST_MS}ms"
-echo "Amount of runtime to allocate from global to local pool: ${BANDWIDTH_SIZE_MS}ms"
-echo "Number of tasks to iterate in a single balance run: ${NR_MIGRATE}"
-
-call_gawk() {
-  printf '%s' "$(gawk 'BEGIN {print '"${1}"'}')"
+calcf() {
+    fmt=$1; shift
+    IFS=,; gawk "BEGIN { printf \"$fmt\", $* }"
 }
 
+# Number of processing units
 NPROC="$(nproc)"
-# Linux uses this algorithm to multiply miliseconds
-MODIFIER="$( call_gawk "10 ** 6 * (1 + int(log(${NPROC}) / log(2)))" )"
 
+# Linux uses this algorithm to multiply miliseconds
+MODIFIER="$( calcf "%d" "10 ** 6 * (1 + int(log(${NPROC}) / log(2)))" )"
+
+# Files
 LATENCY_NS_FILE="/sys/kernel/debug/sched/latency_ns"
 MIN_GRANULARITY_NS_FILE="/sys/kernel/debug/sched/min_granularity_ns"
 WAKEUP_GRANULARITY_NS_FILE="/sys/kernel/debug/sched/wakeup_granularity_ns"
@@ -46,6 +44,7 @@ MIGRATION_COST_NS_FILE="/sys/kernel/debug/sched/migration_cost_ns"
 BANDWIDTH_SIZE_US_FILE="/proc/sys/kernel/sched_cfs_bandwidth_slice_us"
 NR_MIGRATE_FILE="/sys/kernel/debug/sched/nr_migrate"
 
+# Legacy Files
 if [ ! -f "$LATENCY_NS_FILE" ]; then
     echo "Detected kernel <5.13. Using legacy locations."
     LATENCY_NS_FILE="/proc/sys/kernel/sched_latency_ns"
@@ -55,9 +54,51 @@ if [ ! -f "$LATENCY_NS_FILE" ]; then
     NR_MIGRATE_FILE="/proc/sys/kernel/sched_nr_migrate"
 fi
 
-printf '%s' "$( call_gawk "int(${LATENCY_MS} * ${MODIFIER})" )" > "$LATENCY_NS_FILE"
-printf '%s' "$( call_gawk "int(${MIN_GRANULARITY_MS} * ${MODIFIER})" )" > "$MIN_GRANULARITY_NS_FILE"
-printf '%s' "$( call_gawk "int(${WAKEUP_GRANULARITY_MS} * ${MODIFIER})" )" > "$WAKEUP_GRANULARITY_NS_FILE"
-printf '%s' "$( call_gawk "int(${MIGRATION_COST_MS} * ${MODIFIER})" )" > "$MIGRATION_COST_NS_FILE"
-printf '%s' "$( call_gawk "int(${BANDWIDTH_SIZE_MS} * 1000)" )" > "$BANDWIDTH_SIZE_US_FILE"
-printf '%s' "$NR_MIGRATE" > "$NR_MIGRATE_FILE"
+# Origial Values
+O_LATENCY_NS="$( cat "$LATENCY_NS_FILE" )"
+O_MIN_GRANULARITY_NS="$( cat "$MIN_GRANULARITY_NS_FILE" )"
+O_WAKEUP_GRANULARITY_NS="$( cat "$WAKEUP_GRANULARITY_NS_FILE" )"
+O_MIGRATION_COST_NS="$( cat "$MIGRATION_COST_NS_FILE" )"
+O_BANDWIDTH_SIZE_US="$( cat "$BANDWIDTH_SIZE_US_FILE" )"
+O_NR_MIGRATE="$( cat "$NR_MIGRATE_FILE" )"
+
+# Updates
+calcf "%d" "${LATENCY_MS} * ${MODIFIER}" > "$LATENCY_NS_FILE"
+calcf "%d" "${MIN_GRANULARITY_MS} * ${MODIFIER}" > "$MIN_GRANULARITY_NS_FILE"
+calcf "%d" "${WAKEUP_GRANULARITY_MS} * ${MODIFIER}" > "$WAKEUP_GRANULARITY_NS_FILE"
+calcf "%d" "${MIGRATION_COST_MS} * ${MODIFIER}" > "$MIGRATION_COST_NS_FILE"
+calcf "%d" "${BANDWIDTH_SIZE_MS} * 1000" > "$BANDWIDTH_SIZE_US_FILE"
+calcf "%d" "$NR_MIGRATE" > "$NR_MIGRATE_FILE"
+
+# New Values
+N_LATENCY_NS="$( cat "$LATENCY_NS_FILE" )"
+N_MIN_GRANULARITY_NS="$( cat "$MIN_GRANULARITY_NS_FILE" )"
+N_WAKEUP_GRANULARITY_NS="$( cat "$WAKEUP_GRANULARITY_NS_FILE" )"
+N_MIGRATION_COST_NS="$( cat "$MIGRATION_COST_NS_FILE" )"
+N_BANDWIDTH_SIZE_US="$( cat "$BANDWIDTH_SIZE_US_FILE" )"
+N_NR_MIGRATE="$( cat "$NR_MIGRATE_FILE" )"
+
+# Output Changes
+calcf "Targeted preemption latency for CPU-bound tasks: %.3fms -> %.3fms\n" \
+    "$O_LATENCY_NS / 10 ** 6" \
+    "$N_LATENCY_NS / 10 ** 6"
+
+calcf "Minimal preemption granularity for CPU-bound tasks: %.3fms -> %.3fms\n" \
+    "$O_MIN_GRANULARITY_NS / 10 ** 6" \
+    "$N_MIN_GRANULARITY_NS / 10 ** 6"
+
+calcf "Wake-up granularity: %.3fms -> %.3fms\n" \
+    "$O_WAKEUP_GRANULARITY_NS / 10 ** 6" \
+    "$N_WAKEUP_GRANULARITY_NS / 10 ** 6"
+
+calcf "Task migration cost: %.3fms -> %.3fms\n" \
+    "$O_MIGRATION_COST_NS / 10 ** 6" \
+    "$N_MIGRATION_COST_NS / 10 ** 6"
+
+calcf "Amount of runtime to allocate from global to local pool: %.3fms -> %.3fms\n" \
+    "$O_BANDWIDTH_SIZE_US / 10 ** 3" \
+    "$N_BANDWIDTH_SIZE_US / 10 ** 3"
+
+calcf "Number of tasks to iterate in a single balance run: %d -> %d\n" \
+    "$O_NR_MIGRATE" \
+    "$N_NR_MIGRATE"
