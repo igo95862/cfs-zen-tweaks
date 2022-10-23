@@ -36,23 +36,43 @@ NPROC="$(nproc)"
 # Linux uses this algorithm to multiply miliseconds
 MODIFIER="$( calcf "%d" "10 ** 6 * (1 + int(log(${NPROC}) / log(2)))" )"
 
-# Files
-LATENCY_NS_FILE="/sys/kernel/debug/sched/latency_ns"
-MIN_GRANULARITY_NS_FILE="/sys/kernel/debug/sched/min_granularity_ns"
-WAKEUP_GRANULARITY_NS_FILE="/sys/kernel/debug/sched/wakeup_granularity_ns"
-MIGRATION_COST_NS_FILE="/sys/kernel/debug/sched/migration_cost_ns"
-BANDWIDTH_SIZE_US_FILE="/proc/sys/kernel/sched_cfs_bandwidth_slice_us"
-NR_MIGRATE_FILE="/sys/kernel/debug/sched/nr_migrate"
+if [ -z "$MODIFIER" ] || [ "$MODIFIER" -le 0 ]; then
+    echo "Failed to calculate modifier"
+    exit 1
+fi
 
-# Legacy Files
-if [ ! -f "$LATENCY_NS_FILE" ]; then
+# Files
+if [ -f "/sys/kernel/debug/sched/latency_ns" ]; then
+    LATENCY_NS_FILE="/sys/kernel/debug/sched/latency_ns"
+    MIN_GRANULARITY_NS_FILE="/sys/kernel/debug/sched/min_granularity_ns"
+    WAKEUP_GRANULARITY_NS_FILE="/sys/kernel/debug/sched/wakeup_granularity_ns"
+    MIGRATION_COST_NS_FILE="/sys/kernel/debug/sched/migration_cost_ns"
+    BANDWIDTH_SIZE_US_FILE="/proc/sys/kernel/sched_cfs_bandwidth_slice_us"
+    NR_MIGRATE_FILE="/sys/kernel/debug/sched/nr_migrate"
+else
     echo "Detected kernel <5.13. Using legacy locations."
     LATENCY_NS_FILE="/proc/sys/kernel/sched_latency_ns"
     MIN_GRANULARITY_NS_FILE="/proc/sys/kernel/sched_min_granularity_ns"
     WAKEUP_GRANULARITY_NS_FILE="/proc/sys/kernel/sched_wakeup_granularity_ns"
     MIGRATION_COST_NS_FILE="/proc/sys/kernel/sched_migration_cost_ns"
+    BANDWIDTH_SIZE_US_FILE="/proc/sys/kernel/sched_cfs_bandwidth_slice_us"
     NR_MIGRATE_FILE="/proc/sys/kernel/sched_nr_migrate"
 fi
+
+for FILE in \
+    "$LATENCY_NS_FILE" \
+    "$MIN_GRANULARITY_NS_FILE" \
+    "$WAKEUP_GRANULARITY_NS_FILE" \
+    "$MIGRATION_COST_NS_FILE" \
+    "$BANDWIDTH_SIZE_US_FILE" \
+    "$NR_MIGRATE_FILE" \
+; do
+    if [ ! -f "$FILE" ]; then
+        echo "File not found: $FILE"
+        echo "Scheduler not CFS?"
+        exit 1
+    fi
+done
 
 # Origial Values
 O_LATENCY_NS="$( cat "$LATENCY_NS_FILE" )"
