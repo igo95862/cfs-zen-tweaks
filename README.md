@@ -45,6 +45,8 @@ If you have Secure Boot the script might not be able to run. [See this thread fo
 
 ## Version History
 
+* 1.3.0
+    * Add support for EEVDF scheduler from kernel 6.6
 * 1.2.0
     * Fixed SELinux preventing systemd unit to run on Fedora (now script resides in `/usr/sbin` directory)
     * Gave unique name to script. (now is called `set-cfs-zen-tweaks.bash`)

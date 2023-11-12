@@ -1,6 +1,6 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-2.0-only
-# Copyright (C) 2021  igo95862
+# Copyright (C) 2021-2023  igo95862
 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License

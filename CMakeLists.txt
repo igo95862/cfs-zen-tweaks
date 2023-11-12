@@ -19,7 +19,7 @@ project(cfs-zen-tweaks
         LANGUAGES NONE
         HOMEPAGE_URL "https://github.com/igo95862/cfs-zen-tweaks"
         DESCRIPTION "Tweak Linux kernel CFS scheduler for responsiveness"
-        VERSION "1.2.0"
+        VERSION "1.3.0"
 )
 
 cmake_minimum_required(VERSION 3.16)
